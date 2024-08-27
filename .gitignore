@@ -145,3 +145,4 @@ mlartifacts/
 # mlops Advanced
 train_dir/
 tinybert-sentiment-analysis/
+credentials
