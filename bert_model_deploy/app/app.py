@@ -4,6 +4,7 @@ from scripts.data_model import NLPDataInput, NLPDataOutput
 # model loader
 import torch
 import os
+import uvicorn
 from scripts.s3 import download_dir
 from transformers import pipeline
 
@@ -12,7 +13,7 @@ app = FastAPI()
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 model_name = 'tinybert-sentiment-analysis/'
-local_path = model_name #S3 경로
+local_path = 'ml-models/'+model_name #S3 경로
 
 if not os.path.isdir(local_path):
     download_dir(local_path, model_name)
@@ -24,7 +25,7 @@ def root():
     return {"hello":"FastAPI"}
 
 import time
-@app.post('/api/v1/sentiment')
+@app.post('/api/v1/sentiment') # 127.0.0.1:8000/api/v1/sentiment 에서 POST 요청을 받음
 def sentiment_analysis(data: NLPDataInput): # payload: 프론트에서 보내주는 데이터
     start_time = time.time()
 
@@ -51,8 +52,8 @@ def sentiment_analysis(data: NLPDataInput): # payload: 프론트에서 보내주
 
     return result
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app="app:app", port=8000, reload=True)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app="app:app", port=8000, reload=True)
                 
 
