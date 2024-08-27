@@ -4,12 +4,14 @@ services:
       context: .
     ports:
       - ":5000"
+    volumes:
+      - "./.aws:/root/.aws:ro"
 
   nginx: # 웹서버(리버스 프록시)
     build:
       context: .
       dockerfile: Dockerfile.nginx # NginX 설정 파일이 포함된 Dockerfile
     depends_on:
-      - app
+      - app # app 서비스가 준비되면 -> nginx 시작
     ports:
       - "80:80"
